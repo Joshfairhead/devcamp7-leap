@@ -60,7 +60,7 @@ mod courses {
     fn section_entry_definition() -> ValidatingEntryType {
         section::entry::section_entry_def()
     }
-
+    //new
     #[entry_def]
     fn section_anchor_definition() -> ValidatingEntryType {
         section::entry::section_anchor_def()

@@ -39,7 +39,7 @@ impl Content {
     }
 }
 
-// Holochain entry definition for Course
+// Holochain entry definition for Content
 pub fn section_entry_def() -> ValidatingEntryType {
     entry!(
         name: Section::entry_type(),

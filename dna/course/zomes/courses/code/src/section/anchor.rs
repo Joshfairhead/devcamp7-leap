@@ -63,8 +63,8 @@ pub fn section_anchor_def() -> ValidatingEntryType {
             }
         },
         links:[
-            // link that connects CourseAnchor to the latest Course entry
-            // This is a necessary link that allows access to course data
+            // link that connects SectionAnchor to the latest Section entry
+            // This is a necessary link that allows access to section data
             to!(
                 SectionAnchor::link_to(),
                 link_type: SectionAnchor::link_type(),
