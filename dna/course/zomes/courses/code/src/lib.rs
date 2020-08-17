@@ -102,9 +102,13 @@ mod courses {
         course::handlers::get_my_enrolled_courses()
     }
 
+    //  ====================== Section definitions
+
     // Section
     // TODO: implement section entry definitions
     // TODO: implement section CRUD methods
+
+    //  ====================== Content definitions
 
     // Content
     // TODO: implement content entry definition
