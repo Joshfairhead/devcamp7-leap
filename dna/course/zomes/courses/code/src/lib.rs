@@ -103,14 +103,25 @@ mod courses {
     }
 
     //  ====================== Section definitions
-
-    // Section
     // TODO: implement section entry definitions
+    #[entry_def]
+    fn section_entry_definition() -> ValidatingEntryType {
+        course::entry::section_entry_def()
+    }
+
+    #[entry_def]
+    fn section_anchor_definition() -> ValidatingEntryType {
+        course::anchor::section_anchor_def()
+    }
+
     // TODO: implement section CRUD methods
 
     //  ====================== Content definitions
-
-    // Content
     // TODO: implement content entry definition
+    #[entry_def]
+    fn content_entry_definition() -> ValidatingEntryType {
+        course::entry::content_entry_def()
+    }
+
     // TODO: implement content CRUD methods
 }
