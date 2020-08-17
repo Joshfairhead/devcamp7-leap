@@ -1,5 +1,3 @@
-// allowing unstable feature to remove item from the vector on a crate level
-#![feature(vec_remove_item)]
 // allowing for this Rust project to have dead code on a crate level
 #![allow(dead_code)]
 // unstable Rust feature
@@ -19,14 +17,12 @@ extern crate serde_json;
 extern crate holochain_json_derive;
 
 use hdk::prelude::*;
+
 use hdk_proc_macros::zome;
 
-// Declaring Rust modules that are used in our project
 mod anchor_trait;
-mod content;
 mod course;
 mod helper;
-mod section;
 
 #[zome]
 mod courses {
@@ -59,8 +55,6 @@ mod courses {
         course::entry::course_entry_def()
     }
 
-    // zome_fn is used to specify that this is a function available to call from our zome
-    // "hc_public" here means that there are no restrictions as to who can call this function
     #[zome_fn("hc_public")]
     fn create_course(title: String, timestamp: u64) -> ZomeApiResult<Address> {
         course::handlers::create(title, timestamp)
@@ -70,7 +64,13 @@ mod courses {
     fn get_latest_course_entry(
         course_anchor_address: Address,
     ) -> ZomeApiResult<Option<course::entry::Course>> {
-        course::handlers::get_latest_course_entry(course_anchor_address)
+        let latest_course_result = course::handlers::get_latest_course(&course_anchor_address)?;
+        match latest_course_result {
+            Some((course_entry, _course_entry_address)) => {
+                return Ok(Some(course_entry));
+            }
+            None => return Ok(None),
+        }
     }
 
     #[zome_fn("hc_public")]
@@ -102,87 +102,11 @@ mod courses {
         course::handlers::get_my_enrolled_courses()
     }
 
-    #[zome_fn("hc_public")]
-    fn enrol_in_course(course_anchor_address: Address) -> ZomeApiResult<Address> {
-        course::handlers::enrol_in_course(course_anchor_address)
-    }
+    // Section
+    // TODO: implement section entry definitions
+    // TODO: implement section CRUD methods
 
-    #[zome_fn("hc_public")]
-    fn get_all_students(course_anchor_address: Address) -> ZomeApiResult<Vec<Address>> {
-        course::handlers::get_students(course_anchor_address)
-    }
-
-    //  ====================== Section definitions
-    #[entry_def]
-    fn section_anchor_entry_definition() -> ValidatingEntryType {
-        section::anchor::section_anchor_def()
-    }
-
-    #[entry_def]
-    fn section_entry_definition() -> ValidatingEntryType {
-        section::entry::entry_def()
-    }
-
-    #[zome_fn("hc_public")]
-    fn get_latest_section_entry(
-        section_anchor_address: Address,
-    ) -> ZomeApiResult<Option<section::entry::Section>> {
-        section::handlers::get_latest_section_entry(section_anchor_address)
-    }
-
-    #[zome_fn("hc_public")]
-    fn create_section(
-        title: String,
-        course_anchor_address: Address,
-        timestamp: u64,
-    ) -> ZomeApiResult<Address> {
-        section::handlers::create(title, &course_anchor_address, timestamp)
-    }
-
-    #[zome_fn("hc_public")]
-    fn update_section(title: String, section_anchor_address: Address) -> ZomeApiResult<Address> {
-        section::handlers::update(title, &section_anchor_address)
-    }
-
-    #[zome_fn("hc_public")]
-    fn delete_section(section_anchor_address: Address) -> ZomeApiResult<Address> {
-        section::handlers::delete(section_anchor_address)
-    }
-
-    //  ====================== Content definitions
-    #[entry_def]
-    fn content_entry_definition() -> ValidatingEntryType {
-        content::entry::section_entry_def()
-    }
-
-    #[zome_fn("hc_public")]
-    fn create_content(
-        name: String,
-        section_anchor_address: Address,
-        url: String,
-        timestamp: u64,
-        description: String,
-    ) -> ZomeApiResult<Address> {
-        content::handlers::create(name, section_anchor_address, url, timestamp, description)
-    }
-
-    #[zome_fn("hc_public")]
-    fn get_contents(section_anchor_address: Address) -> ZomeApiResult<Vec<Address>> {
-        content::handlers::get_contents(&section_anchor_address)
-    }
-
-    #[zome_fn("hc_public")]
-    fn update_content(
-        content_address: Address,
-        name: String,
-        url: String,
-        description: String,
-    ) -> ZomeApiResult<Address> {
-        content::handlers::update(content_address, name, url, description)
-    }
-
-    #[zome_fn("hc_public")]
-    fn delete_content(content_address: Address) -> ZomeApiResult<Address> {
-        content::handlers::delete(content_address)
-    }
+    // Content
+    // TODO: implement content entry definition
+    // TODO: implement content CRUD methods
 }
