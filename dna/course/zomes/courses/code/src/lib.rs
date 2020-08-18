@@ -72,7 +72,7 @@ mod courses {
             None => return Ok(None),
         }
     }
-
+    // sections_address - do I need to replicate this in the sections CRUD? Seems weird to update the course this way. 
     #[zome_fn("hc_public")]
     fn update_course(
         title: String,
@@ -102,11 +102,84 @@ mod courses {
         course::handlers::get_my_enrolled_courses()
     }
 
-    // Section
+    //  ====================== Section definitions
     // TODO: implement section entry definitions
-    // TODO: implement section CRUD methods
+    #[entry_def]
+    fn section_entry_definition() -> ValidatingEntryType {
+        course::entry::section_entry_def()
+    }
 
-    // Content
+    #[entry_def]
+    fn section_anchor_definition() -> ValidatingEntryType {
+        course::anchor::section_anchor_def()
+    }
+
+    // TODO: implement section CRUD methods --> fished out of modules "impl" right? or handlers?
+    #[zome_fn("hc_public")]
+    fn create_section(title: String, course_anchor_address: Address, timestamp: u64, anchor_address: Address,
+    ) -> ZomeApiResult<Address> {
+        section::handlers::create(title, course_anchor_address, timestamp, anchor_address)
+    }
+
+    #[zome_fn("hc_public")]
+    fn get_latest_section_entry(
+        section_anchor_address: Address,
+    ) -> ZomeApiResult<Option<section::entry::Section>> {
+        section::handlers::get_latest_section_entry(section_anchor_address)?;
+    }
+    // this is copied off the course methods code and changed... is the sections_address part relevant here or in the above code?
+    #[zome_fn("hc_public")]
+    fn update_section(
+        title: String,
+        course_anchor_address: Address,
+        timestamp: u64,
+        anchor_address: Address,
+    ) -> ZomeApiResult<Address> {
+        section::handlers::update(title, course_anchor_address, timestamp, anchor_address)
+    }
+
+    #[zome_fn("hc_public")]
+    fn delete_section(section_anchor_address: Address) -> ZomeApiResult<Address> {
+        section::handlers::delete(section_anchor_address)
+    }
+
+    
+    //  ====================== Content definitions
     // TODO: implement content entry definition
-    // TODO: implement content CRUD methods
+    #[entry_def]
+    fn content_entry_definition() -> ValidatingEntryType {
+        course::entry::section_entry_def()
+    }
+
+    // TODO: implement content CRUD methods --> used section anchor addresses as content uses that anchor
+    #[zome_fn("hc_public")]
+    fn create_content(name: String,
+        section_anchor_address: Address,
+        url: String,
+        timestamp: u64,
+        description: String,
+    ) -> ZomeApiResult<Address> {
+        content::handlers::create(name, section_anchor_address, url, timestamp, description) // defined in module
+    }
+
+    #[zome_fn("hc_public")]
+    fn get_contents(section_anchor_address: Address) -> ZomeApiResult<Vec<Address>> {
+        content::handlers::get_contents(&section_anchor_address)?;
+    }
+
+    #[zome_fn("hc_public")]
+    fn update_content(
+        name: String,
+        section_anchor_address: Address,
+        url: String,
+        timestamp: u64,
+        description: String,
+    ) -> ZomeApiResult<Address> {
+        content::handlers::update(name, url, description, timestamp, section_anchor_address,)
+    }
+
+    #[zome_fn("hc_public")]
+    fn delete_content(content_address: Address) -> ZomeApiResult<Address> {
+        content::handlers::delete(content_address)
+    }
 }
