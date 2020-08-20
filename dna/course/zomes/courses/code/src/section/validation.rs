@@ -1,4 +1,3 @@
-/*
 use super::{
     anchor::CourseAnchor,
     catalog_anchor::CourseCatalogAnchor,
@@ -105,9 +104,9 @@ pub fn catalog_delete() -> Result<(), String> {
     Err(String::from("Can't delete the CourseAnchorCatalog entry"))
 }
 
-//  =========================== CourseAnchor links validation
+//  =========================== SectionAnchor links validation
 
-pub fn anchor_to_course_link(validation_data: LinkValidationData) -> Result<(), String> {
+pub fn anchor_to_section_link(validation_data: LinkValidationData) -> Result<(), String> {
     match validation_data {
         hdk::LinkValidationData::LinkAdd {
             link,
