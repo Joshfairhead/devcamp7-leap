@@ -44,18 +44,15 @@ pub fn section_entry_def() -> ValidatingEntryType {
             hdk::ValidationPackageDefinition::Entry
         },
         validation: | validation_data: hdk::EntryValidationData<Content>| {
-            match  validation_data {
-                EntryValidationData::Create { .. } => {
-                    // TODO: implement validation
-                    Ok(())
+            match validation_data {
+                EntryValidationData::Create { entry, validation_data } => {
+                    validation::create(entry, validation_data)
                 },
-                EntryValidationData::Modify { .. } => {
-                    // TODO: implement validation
-                    Ok(())
+                EntryValidationData::Modify { new_entry, old_entry, old_entry_header, validation_data } => {
+                    validation::modify(new_entry, old_entry, old_entry_header, validation_data)
                 },
-                EntryValidationData::Delete { .. } => {
-                    // TODO: implement validation
-                    Ok(())
+                EntryValidationData::Delete { old_entry, old_entry_header, validation_data } => {
+                    validation::delete(old_entry, old_entry_header, validation_data)
                 }
             }
         }
