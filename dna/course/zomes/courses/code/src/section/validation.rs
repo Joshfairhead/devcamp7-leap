@@ -1,5 +1,3 @@
-//modify me with correct pointers
-
 use super::{
     anchor::SectionAnchor,
     catalog_anchor::CourseCatalogAnchor, //I feel this is probably not needed
